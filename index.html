@@ -1,0 +1,109 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>jd</title>
+<meta content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" name="viewport">
+<meta content="yes" name="apple-mobile-web-app-capable">
+<meta content="black" name="apple-mobile-web-app-status-bar-style">
+<meta content="telephone=no" name="format-detection">
+<link rel="stylesheet" href="css/ydui.css?rev=@@hash">
+<link rel="stylesheet" href="css/demo.css">
+<script src="js/ydui.flexible.js"></script>
+<script src="config.js"></script>
+</head>
+<body>
+
+<section class="g-flexview">
+
+    <section class="g-scrollview">
+        <div class="m-celltitle">默认调用</div>
+        <div class="m-cell">
+            <div class="cell-item">
+                <div class="cell-left">所在地区：</div>
+                <div class="cell-right cell-arrow">
+                    <input type="text" class="cell-input" readonly id="area" placeholder="请选择收货地址">
+                </div>
+            </div>
+        </div>
+
+        <div class="m-celltitle">学校</div>
+        <div class="m-cell">
+            <div class="cell-item">
+                <div class="cell-left">学校：</div>
+                <div class="cell-right cell-arrow">
+                    <input type="text" class="cell-input" readonly id="school" value="" placeholder="请选择收货地址">
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+</section>
+
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/ydui.citys.js"></script>
+<script type="text/javascript" src="js/ydui.js"></script>
+<script type="text/javascript">
+/**
+ * 默认调用
+ */
+!function () {
+	var $target = $('#J_Address');
+
+	$target.citySelect();
+
+	$target.on('click', function (event) {
+		event.stopPropagation();
+		$target.citySelect('open');
+	});
+
+	$target.on('done.ydui.cityselect', function (ret) {
+		$(this).val(ret.provance + ' ' + ret.city + ' ' + ret.area);
+	});
+}();
+/**
+ * 请求接口
+ */
+ !function () {
+         var $target = $('#area');
+         var params = {
+             url: ROOT + '/common/data/baseArea/getAreaByParentId.do',
+             firstParentId: '1bd310655978440d953c74711adf207d',
+         };
+
+         $target.citySelect(params);
+         // 点击所在区域，获取区域列表
+         $target.on('click', function (event) {
+             event.stopPropagation();
+             $target.citySelect('open');
+         });
+         $target.on('done.ydui.cityselect', function (ret) {
+             $(this).val(ret.provance+ret.city+ret.area+ret.street+ret.town);
+         });
+         // 点击所在学校，获取学校列表
+         var $school = $('#school');
+         $school.on('click', function (event) {
+             event.stopPropagation();
+             $school.citySelect('schoolopen');
+         });
+         $school.on('done.ydui.cityselect', function (ret) {
+             $(this).val(ret.school);
+         });
+
+         // 点击所在教室，获取教室列表
+         var $class = $('#class');
+         $class.on('click', function (event) {
+             event.stopPropagation();
+             $class.citySelect('classopen');
+         });
+         $class.on('done.ydui.cityselect', function (ret) {
+             $(this).val(ret.class);
+         });
+
+     }();
+</script>
+
+</body>
+</html>
+
